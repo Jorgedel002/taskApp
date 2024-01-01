@@ -10,7 +10,7 @@ const TaskSchema = new mongoose.Schema({
         require: true
     },
     dateEndTask: {
-        type: Date,
+        type: String,
         require: true
     }
 },{
