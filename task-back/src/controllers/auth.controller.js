@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import { createAccessToken } from "../libs/jwt.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken"
+import { TOKEN_SECRET } from "../config.js";
 
 export const signup = async (req, res) => {
     const {completeName, email, password, role} = req.body;
@@ -88,4 +90,24 @@ export const getUsers = async (req,res) => {
     } catch (error) {
         res.status(500).json({message: message.error})
     }
+}
+
+export const verifyToken = async (req, res) => {
+    const {token} = req.token;
+
+    if(!token) return res.status(401).json({message: "Unauthorized"})
+
+    jwt.verify(token, TOKEN_SECRET, async (err, user) => {
+        if(err) return res.status(401).json({message: "Unauthorized"})
+
+        const userFound = await User.findById(user.id);
+
+        if(!userFound) return res.status(401).json({message: 'Not user found'});
+
+        res.json({
+            id: userFound.id,
+            completeName: userFound.completeName,
+            email: userFound.email
+        })
+    })
 }

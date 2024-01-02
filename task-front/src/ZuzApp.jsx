@@ -4,6 +4,7 @@ import {connect} from "react-redux";
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import ProtectedRoute from "./ProtectedRoute.jsx"
 
 function ZuzApp(props) {
     const { loaded, setState } = props;
@@ -15,7 +16,9 @@ function ZuzApp(props) {
     return (
         <BrowserRouter>
         <Routes>
-            <Route path='/' element={<Home/>}></Route>
+            <Route element={<ProtectedRoute/>}>
+                <Route path='/' element={<Home/>}></Route>
+            </Route>
             <Route path='/login' element={<Login/>}></Route>
             <Route path='/register' element={<Register/>}></Route>
         </Routes>
