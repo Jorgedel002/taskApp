@@ -8,7 +8,8 @@ export const createTask = async (req, res) => {
         const newTask = new Task({
             task,
             description,
-            dateEndTask
+            dateEndTask,
+            user: req.user.id
         });
 
         const newTaskSave = await newTask.save();
@@ -25,7 +26,9 @@ export const createTask = async (req, res) => {
 }
 
 export const getTasks = async (req,res) => {
-    const taskFound = await Task.find();
+    const taskFound = await Task.find({
+        user: req.user.id
+    }).populate('user');
 
     try {
         res.json(taskFound);
@@ -35,7 +38,7 @@ export const getTasks = async (req,res) => {
 }
 
 export const getTask = async (req,res) => {
-    const taskFound = await Task.findById(req.params.id);
+    const taskFound = await Task.findById(req.params.id).populate('user');
 
     try {
         res.json(taskFound);
